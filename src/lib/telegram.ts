@@ -2,6 +2,18 @@ import { getDictionary } from "./i18n/load-dictionary.ts";
 import { getLocaleName, resolveLocale, type Locale } from "./i18n/config.ts";
 import type { TelegramSourcePayload } from "./telegram-source.ts";
 
+const leadFieldLimits = {
+  name: 120,
+  contact: 160,
+  message: 2000,
+  sourceUrl: 2048,
+  sourceScreen: 120,
+  sourceForm: 120,
+  sourceButton: 120,
+  timestamp: 64,
+  languageName: 80,
+} as const;
+
 type LeadPayloadShape = Partial<TelegramSourcePayload> & {
   name?: string;
   contact?: string;
@@ -31,14 +43,14 @@ export function validateLeadPayload(payload: unknown): ValidationSuccess | Valid
   const locale = resolveLocale(candidate.languageCode);
   const messages = getDictionary(locale).feedback.api;
 
-  const name = normalizeText(candidate.name);
-  const contact = normalizeText(candidate.contact);
-  const message = normalizeText(candidate.message);
-  const sourceUrl = normalizeText(candidate.sourceUrl);
-  const sourceScreen = normalizeText(candidate.sourceScreen);
-  const sourceForm = normalizeText(candidate.sourceForm);
-  const sourceButton = normalizeText(candidate.sourceButton);
-  const timestamp = normalizeText(candidate.timestamp);
+  const name = normalizeText(candidate.name, leadFieldLimits.name);
+  const contact = normalizeText(candidate.contact, leadFieldLimits.contact);
+  const message = normalizeText(candidate.message, leadFieldLimits.message);
+  const sourceUrl = normalizeText(candidate.sourceUrl, leadFieldLimits.sourceUrl);
+  const sourceScreen = normalizeText(candidate.sourceScreen, leadFieldLimits.sourceScreen);
+  const sourceForm = normalizeText(candidate.sourceForm, leadFieldLimits.sourceForm);
+  const sourceButton = normalizeText(candidate.sourceButton, leadFieldLimits.sourceButton);
+  const timestamp = normalizeText(candidate.timestamp, leadFieldLimits.timestamp);
 
   if (!name || !contact || !sourceUrl || !sourceScreen || !sourceForm || !sourceButton || !timestamp) {
     return {
@@ -55,7 +67,7 @@ export function validateLeadPayload(payload: unknown): ValidationSuccess | Valid
       contact,
       message,
       languageCode: locale,
-      languageName: normalizeText(candidate.languageName) || getLocaleName(locale),
+      languageName: normalizeText(candidate.languageName, leadFieldLimits.languageName) || getLocaleName(locale),
       sourceUrl,
       sourceScreen,
       sourceForm,
@@ -94,14 +106,18 @@ function escapeHtml(value: string) {
     .replace(/>/g, "&gt;");
 }
 
-function normalizeText(value: unknown): string | undefined {
+function normalizeText(value: unknown, maxLength?: number): string | undefined {
   if (typeof value !== "string") {
     return undefined;
   }
 
   const trimmed = value.trim();
 
-  return trimmed.length > 0 ? trimmed : undefined;
+  if (trimmed.length === 0 || (maxLength !== undefined && trimmed.length > maxLength)) {
+    return undefined;
+  }
+
+  return trimmed;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

@@ -10,6 +10,10 @@ test("getLocalizedAssets returns shared fallback images and localized video embe
 
   assert.equal(assets.hero.maskSrc, "/media/warrior-mask.png");
   assert.equal(assets.carouselCards.length, 6);
+  assert.equal(
+    assets.carouselCards.find((card) => card.id === "card-4")?.backSrc,
+    "/media/carousel-sun-back.webp",
+  );
   assert.equal(assets.spreadCardImages.mag, "/media/spread-card-01.webp");
   assert.match(assets.featuredVideos.primary.embedUrl, /1196251431/);
   assert.match(assets.featuredVideos.secondary.embedUrl, /1196251432/);

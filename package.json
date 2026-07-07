@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
-    "start": "next start",
+    "start": "node .next/standalone/server.js",
     "test": "node --test src/**/*.test.ts",
     "lint": "eslint ."
   },

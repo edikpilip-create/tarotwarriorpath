@@ -5,9 +5,9 @@ import { useEffect, useRef } from "react";
 import styles from "./AnimatedCampfire.module.css";
 
 // FIRE PARTICLE: лимиты количества частиц. Увеличивай осторожно: больше частиц = плотнее огонь, но выше нагрузка.
-const maxFlames = 140;
-const maxSparks = 80;
-const maxSmoke = 60;
+const maxFlames = 120;
+const maxSparks = 60;
+const maxSmoke = 40;
 
 // FIRE TUNING: вертикальная точка основания внутри canvas. Больше = пламя выше, меньше = ниже.
 const fireBaseOffset = 84;
@@ -53,11 +53,11 @@ class FlameParticle {
     this.y = height - fireBaseOffset;
     // FIRE TUNING: vx = движение вбок, vy = подъём вверх. Более отрицательный vy делает пламя выше/быстрее.
     this.vx = (Math.random() - 0.5) * 2.6;
-    this.vy = -(Math.random() * 4 + 4);
+    this.vy = -(Math.random() * 2 + 3);
     // FIRE TUNING: baseRadius задаёт размер языков пламени, decay — скорость их исчезновения.
     this.baseRadius = Math.random() * 8 + 8;
     this.radius = this.baseRadius;
-    this.decay = Math.random() * 0.012 + 0.011;
+    this.decay = Math.random() * 0.005 + 0.011;
   }
 
   update(wind: number) {
@@ -75,8 +75,8 @@ class FlameParticle {
     const green = Math.floor(220 * Math.pow(this.life, 1.3));
     const blue = Math.floor(60 * Math.pow(this.life, 2.5));
     // FIRE TUNING: width/height задают вытянутость языков пламени.
-    const width = this.radius * (0.6 + this.life * 0.28);
-    const height = this.radius * (2.1 + this.life * 1.1);
+    const width = this.radius * (1.2 + this.life * 0.28);
+    const height = this.radius * (2.1 + this.life * 2.2);
 
     ctx.save();
     ctx.globalCompositeOperation = "screen";
@@ -112,21 +112,21 @@ class SparkParticle {
 
   constructor({ width, height }: Bounds) {
     // FIRE TUNING: точка рождения и разброс искр.
-    this.x = width / 2 + (Math.random() - 0.5) * 40;
+    this.x = width / 2 + (Math.random() - 0.5) * 20;
     this.y = height - fireBaseOffset - 22;
     // FIRE TUNING: vx/vy управляют разлётом и скоростью подъёма искр.
-    this.vx = (Math.random() - 0.5) * 4;
-    this.vy = -(Math.random() * 2 + 2);
+    this.vx = (Math.random() - 0.5) * 2;
+    this.vy = -(Math.random() * 2 + 1);
     // FIRE TUNING: radius = размер искры, decay = как быстро она гаснет.
-    this.radius = Math.random() * 1.5 + 0.5;
-    this.decay = Math.random() * 0.01 + 0.003;
+    this.radius = Math.random() * 2.5 + 0.5;
+    this.decay = Math.random() * 0.001 + 0.003;
     this.wobble = Math.random() * 0.1;
     this.green = Math.floor(140 + Math.random() * 60);
   }
 
   update(wind: number) {
     // FIRE CURSOR: wind усиливает боковой снос искр при движении курсора.
-    this.vx = clamp(this.vx + wind * 0.18, -8, 8);
+    this.vx = clamp(this.vx + wind * 0.09, -8, 8);
     this.x += this.vx + Math.sin(this.y * 0.05) * this.wobble;
     this.y += this.vy;
     this.alpha -= this.decay;
@@ -159,16 +159,16 @@ class FlameTipSpark {
     this.x = x;
     this.y = y;
     // FIRE TUNING: скорость, размер и затухание верхушечных искр.
-    this.vx = vx + (Math.random() - 0.5) * 2;
-    this.vy = -(Math.random() * 3 + 2);
-    this.radius = Math.random() * 0.8 + 0.3;
-    this.decay = Math.random() * 0.03 + 0.015;
-    this.green = Math.floor(160 + Math.random() * 40);
+    this.vx = vx + (Math.random() - 0.3) * 2;
+    this.vy = -(Math.random() * 2 + 1);
+    this.radius = Math.random() * 0.4 + 0.3;
+    this.decay = Math.random() * 0.01 + 0.1;
+    this.green = Math.floor(120 + Math.random() * 20);
   }
 
   update(wind: number) {
     // FIRE CURSOR: верхушечные искры сильнее реагируют на wind, чем дым.
-    this.vx = clamp(this.vx + wind * 0.22, -8, 8);
+    this.vx = clamp(this.vx + wind * 0.01, -8, 4);
     this.x += this.vx;
     this.y += this.vy;
     this.alpha -= this.decay;
@@ -212,7 +212,7 @@ class SmokeParticle {
 
   update(wind: number) {
     // FIRE CURSOR: дым мягко сносится курсорным ветром.
-    this.vx = clamp(this.vx + wind * 0.1, -5, 5);
+    this.vx = clamp(this.vx + wind * 0.001, -5, 5);
     this.x += this.vx;
     this.y += this.vy;
     this.life -= this.decay;
@@ -323,7 +323,7 @@ export function AnimatedCampfire() {
       const rect = root.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       // FIRE CURSOR: 220 и clamp(-2.2, 2.2) задают силу реакции на курсор.
-      wind.target = clamp((pointerEvent.clientX - centerX) / 220, -2.2, 2.2);
+      wind.target = clamp((pointerEvent.clientX - centerX) / 110, -1.1, 1.1);
     };
 
     const settleWind = () => {
@@ -343,7 +343,7 @@ export function AnimatedCampfire() {
       fadeCanvas(ctx, bounds.width, bounds.height);
       // FIRE CURSOR: плавность и затухание курсорного ветра.
       wind.current += (wind.target - wind.current) * 0.01;
-      wind.target *= 0.985;
+      wind.target *= 0;
 
       if (isVisible && bounds.width > 0 && bounds.height > 0) {
         // FIRE PARTICLE: скорость рождения пламени и искр.

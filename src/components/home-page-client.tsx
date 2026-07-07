@@ -569,7 +569,13 @@ export default function HomePageClient({ lang, dictionary, assets }: HomePageCli
           <p>{dictionary.practiceSection.description}</p>
         </div>
         <div className="practice-visual" aria-hidden="true">
-          <img src={assets.practice.visualSrc} alt="" />
+          <Image
+            src={assets.practice.visualSrc}
+            alt=""
+            width={445}
+            height={561}
+            sizes="(max-width: 767px) min(100vw, 520px), (max-width: 980px) min(30vw, 260px), min(32vw, 420px)"
+          />
         </div>
         <div className="practice-grid">
           {dictionary.practiceCards.map((card, index) => (

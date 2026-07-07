@@ -6,7 +6,7 @@
      Canvas-слой больше anchor, чтобы искры и дым не обрезались краями bitmap.
      width даёт запас по бокам, height — запас сверху.
   */
-  width: 180%;
+  width: 300%;
   height: 155%;
   overflow: visible;
   pointer-events: none;

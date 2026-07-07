@@ -43,6 +43,25 @@ test("validateLeadPayload normalizes a valid multilingual lead payload", () => {
   assert.equal(result.data.sourceScreen, "spread");
 });
 
+test("validateLeadPayload rejects oversized lead payload fields", () => {
+  const result = validateLeadPayload({
+    name: "M".repeat(121),
+    contact: "@mira",
+    languageCode: "en",
+    sourceUrl: "/en#contact",
+    sourceScreen: "contact",
+    sourceForm: "lead-form",
+    sourceButton: "submit-lead-form",
+    timestamp: "2026-01-01T12:00:00.000Z",
+  });
+
+  assert.deepEqual(result, {
+    ok: false,
+    status: 400,
+    message: "Please provide a name and contact.",
+  });
+});
+
 test("formatTelegramMessage escapes html and includes request source context", () => {
   const text = formatTelegramMessage({
     name: "<Mira>",

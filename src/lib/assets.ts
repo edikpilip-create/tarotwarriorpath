@@ -62,7 +62,7 @@ const sharedAssets = {
     {
       id: "card-4",
       frontSrc: "/media/carousel-sun.webp",
-      backSrc: "/media/carousel-power-back.webp",
+      backSrc: "/media/carousel-sun-back.webp",
     },
     {
       id: "card-5",
