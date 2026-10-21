@@ -11,6 +11,6 @@
     <path d="M600 74 890 315 600 556 310 315 600 74Z" stroke-width="3"/>
     <circle cx="600" cy="315" r="142" stroke-width="2"/>
   </g>
-  <text x="600" y="285" text-anchor="middle" fill="#f7ecd5" font-family="Georgia,serif" font-size="94">TARO</text>
-  <text x="600" y="370" text-anchor="middle" fill="#d8b66a" font-family="Georgia,serif" font-size="64">Путь Воина</text>
+  <text x="600" y="285" text-anchor="middle" fill="#f7ecd5" font-family="DS Nova Black,Georgia,serif" font-size="94">TARO</text>
+  <text x="600" y="370" text-anchor="middle" fill="#d8b66a" font-family="DS Nova Black,Georgia,serif" font-size="64">Путь Воина</text>
 </svg>

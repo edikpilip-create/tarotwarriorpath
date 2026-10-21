@@ -42,7 +42,13 @@
     "navSpread": "Spread",
     "navContact": "Inquiry",
     "heroCta": "Draw 3 cards",
+    "heroOrbitFindOut": "Find Out",
+    "heroOrbitSpread": "Spread",
+    "heroOrbitBuy": "Buy",
+    "heroBuyCta": "Buy the Deck",
     "spreadDraw": "Draw cards",
+    "spreadShuffle": "Shuffle cards",
+    "spreadReset": "New spread",
     "submitIdle": "Send inquiry",
     "submitSending": "Sending..."
   },
@@ -106,6 +112,44 @@
       { "element": "Earth", "meaning": "Form" }
     ]
   },
+  "suitVideoCarousel": {
+    "ariaLabel": "Suit meaning carousel",
+    "placeholderLabel": "Video placeholder",
+    "slides": [
+      {
+        "id": "swords",
+        "name": "Swords",
+        "meta": "Element - Air, totem birds - raven and eagle.",
+        "description": "Intellect and clarity, spiritual vision, resilience, and the ability to see beyond the possible.",
+        "iconAlt": "Swords suit icon",
+        "videoSrc": "/media/suit-carousel/raven.mp4"
+      },
+      {
+        "id": "wands",
+        "name": "Wands",
+        "meta": "Fire element, totems - jaguar and panther.",
+        "description": "They symbolize energy, willpower, the desire for action, and creative motivation.",
+        "iconAlt": "Wands suit icon",
+        "videoSrc": "/media/suit-carousel/pantera.mp4"
+      },
+      {
+        "id": "pentacles",
+        "name": "Pentacles",
+        "meta": "Earth element, totems - bull and buffalo.",
+        "description": "Practicality, hard work and achievement, balance between the spiritual and material.",
+        "iconAlt": "Pentacles suit icon",
+        "videoSrc": "/media/suit-carousel/buffalo.mp4"
+      },
+      {
+        "id": "cups",
+        "name": "Cups",
+        "meta": "The element of water, totems - fish and dolphins.",
+        "description": "Emotions, intuition, the search for deep meaning, philosophy, and inner harmony.",
+        "iconAlt": "Cups suit icon",
+        "videoSrc": "/media/suit-carousel/dophine.mp4"
+      }
+    ]
+  },
   "suits": [
     { "name": "Swords", "element": "Air", "totems": "raven and eagle", "text": "Intellect and clarity, spiritual insight, and the ability to see beyond the possible." },
     { "name": "Wands", "element": "Fire", "totems": "jaguar and panther", "text": "Energy, willpower, creative momentum, and the impulse to act." },
@@ -127,6 +171,9 @@
   "spread": {
     "heading": "Interactive card spread",
     "description": "Press the button to draw 3 cards at random from a 21-card deck and receive a short reading for each one.",
+    "slotPlaceholder": "Choose a card below",
+    "selectionPrompt": "Choose 3 Tarot cards:",
+    "preparing": "Preparing your spread",
     "cards": [
       { "id": "mag", "title": "The Magician", "description": "Gather your attention into one point and take the first precise step.", "imageAlt": "The Magician card" },
       { "id": "high-priestess", "title": "The High Priestess", "description": "Listen to the knowledge that arrives before words.", "imageAlt": "The High Priestess card" },

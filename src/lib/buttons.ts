@@ -25,8 +25,27 @@ export const buttonRegistry = {
     id: "hero-draw-spread",
     href: "#spread",
   },
+  heroOrbitFindOut: {
+    id: "hero-orbit-find-out",
+    href: "#split-section",
+  },
+  heroOrbitSpread: {
+    id: "hero-orbit-spread",
+    href: "#spread",
+  },
+  heroOrbitBuy: {
+    id: "hero-orbit-buy",
+    href: "#lead-form",
+  },
   spreadDraw: {
     id: "spread-draw",
+  },
+  // SPREAD REDESIGN: separate IDs for the new shuffle-first and reset-after-result buttons.
+  spreadShuffle: {
+    id: "spread-shuffle",
+  },
+  spreadReset: {
+    id: "spread-reset",
   },
   submitLead: {
     id: "submit-lead-form",

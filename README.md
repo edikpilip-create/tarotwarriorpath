@@ -2,6 +2,14 @@
 
 Multilingual landing page for an author tarot deck, built with Next.js App Router, React, TypeScript, and Tailwind CSS.
 
+## GitHub Destination
+
+This Tarot project (`artofseeingtest`, local folder `F:\artofseeing`) is published only to [edikpilip-create/tarotwarriorpath](https://github.com/edikpilip-create/tarotwarriorpath). Both the fetch URL and the single push URL for `origin` must point to this repository.
+
+The separate Olga Massage Site project is published to a repository owned by `dominikwood` through collaboration from the user's personal account. Keep its code and repository configuration separate from this project.
+
+Before publishing, check `git remote -v`. Do not publish this project to the former `edikpilip-create/tarot` repository or to the massage project's repository. Use repository-local Git settings so account and destination changes do not affect other projects.
+
 ## Runtime
 
 Use Node.js `22.22.3` and npm `10.9.8`. These versions are declared in `package.json` and used by every Docker stage.

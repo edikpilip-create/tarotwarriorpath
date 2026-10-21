@@ -7,23 +7,19 @@ test("getInitialSpreadState starts screen 10 with no visible cards", () => {
   assert.deepEqual(getInitialSpreadState(), []);
 });
 
-test("getSpreadResultsScrollTop centers the results block in the viewport", () => {
+test("getSpreadResultsScrollTop aligns the results block below the fixed header", () => {
   const scrollTop = getSpreadResultsScrollTop({
     elementTop: 1200,
-    elementHeight: 540,
-    viewportHeight: 900,
-    offset: 24,
+    offset: 96,
   });
 
-  assert.equal(scrollTop, 996);
+  assert.equal(scrollTop, 1104);
 });
 
 test("getSpreadResultsScrollTop never returns a negative scroll position", () => {
   const scrollTop = getSpreadResultsScrollTop({
     elementTop: 120,
-    elementHeight: 280,
-    viewportHeight: 900,
-    offset: 24,
+    offset: 160,
   });
 
   assert.equal(scrollTop, 0);

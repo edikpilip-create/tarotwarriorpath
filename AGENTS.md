@@ -1,5 +1,15 @@
 # Project Guide
 
+## GitHub Repository Boundary
+
+- This project is the Tarot / artofseeingtest website, currently at `F:\artofseeing`.
+- Publish this project only to `https://github.com/edikpilip-create/tarotwarriorpath.git`.
+- Keep `origin` as the single publishing remote, with one push URL pointing to that repository. Do not push to the former `edikpilip-create/tarot` repository.
+- The separate Olga Massage Site project is published to a repository owned by `dominikwood` through collaboration from the user's personal account. It must never receive this project's code.
+- Before every push, verify the working directory, `git remote -v`, and the explicit destination branch. Push only to the Tarot repository above.
+- Keep remote, branch, and account settings local to this repository. Do not change global Git settings or the separate massage project's configuration.
+- Never commit `.env`, credentials, `node_modules`, or generated build output.
+
 ## Stack
 
 - Next.js App Router

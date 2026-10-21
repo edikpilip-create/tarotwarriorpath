@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 import { type Locale } from "./i18n/config.ts";
 
-import { spreadCardIds, type SpreadCardId } from "./spread-cards.ts";
+import { spreadCardIds, spreadCardImageSrcById, type SpreadCardId } from "./spread-cards.ts";
 
 type CarouselAsset = {
   id: string;
@@ -30,6 +30,7 @@ export type LocalizedAssets = {
     primary: FeaturedVideoAsset;
     secondary: FeaturedVideoAsset;
   };
+  spreadCardBackSrc: string;
   spreadCardImages: Record<SpreadCardId, string>;
 };
 
@@ -83,6 +84,8 @@ const sharedAssets = {
       embedUrl: "https://player.vimeo.com/video/1196251432?autoplay=1&muted=1&loop=1&controls=0&title=0&byline=0&portrait=0&badge=0&transparent=0&dnt=1",
     },
   },
+  // SPREAD REDESIGN: one shared back image is rendered 21 times as separate interactive deck buttons.
+  spreadCardBackSrc: "/media/card-turnover-spread.png",
 } as const;
 
 const localeOverrides: Partial<Record<Locale, Partial<LocalizedAssets>>> = {};
@@ -108,8 +111,9 @@ export function getLocalizedAssets(locale: Locale): LocalizedAssets {
       primary: overrides?.featuredVideos?.primary ?? sharedAssets.featuredVideos.primary,
       secondary: overrides?.featuredVideos?.secondary ?? sharedAssets.featuredVideos.secondary,
     },
+    spreadCardBackSrc: overrides?.spreadCardBackSrc ?? sharedAssets.spreadCardBackSrc,
     // Localized spread files live in /public/media/locales/{lang}/spread/
-    // using spread-card-01.webp ... spread-card-21.webp.
+    // using the same filenames as the shared /public/media/ fallback assets.
     spreadCardImages: buildSpreadCardImages(locale),
   };
 }
@@ -124,13 +128,13 @@ function buildCarouselCards(locale: Locale): CarouselAsset[] {
 
 function buildSpreadCardImages(locale: Locale): Record<SpreadCardId, string> {
   return Object.fromEntries(
-    spreadCardIds.map((id, index) => [
+    spreadCardIds.map((id) => [
       id,
       resolveLocalizedMediaPath(
         locale,
         "spread",
-        `spread-card-${String(index + 1).padStart(2, "0")}.webp`,
-        `/media/spread-card-${String(index + 1).padStart(2, "0")}.webp`,
+        getFileName(spreadCardImageSrcById[id]),
+        spreadCardImageSrcById[id],
       ),
     ]),
   ) as Record<SpreadCardId, string>;

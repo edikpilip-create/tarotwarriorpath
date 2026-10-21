@@ -8,6 +8,16 @@ export type LocalizedSpreadCardEntry = {
   imageSrc?: string;
 };
 
+export type LocalizedSuitVideoSlide = {
+  id: string;
+  name: string;
+  meta: string;
+  description: string;
+  iconAlt: string;
+  videoSrc?: string;
+  posterSrc?: string;
+};
+
 export type LocaleDictionary = {
   locale: {
     code: Locale;
@@ -45,7 +55,14 @@ export type LocaleDictionary = {
     navSpread: string;
     navContact: string;
     heroCta: string;
+    heroOrbitFindOut: string;
+    heroOrbitSpread: string;
+    heroOrbitBuy: string;
+    heroBuyCta: string;
     spreadDraw: string;
+    // SPREAD REDESIGN: labels used by the interactive spread controls.
+    spreadShuffle: string;
+    spreadReset: string;
     submitIdle: string;
     submitSending: string;
   };
@@ -103,6 +120,11 @@ export type LocaleDictionary = {
       meaning: string;
     }>;
   };
+  suitVideoCarousel: {
+    ariaLabel: string;
+    placeholderLabel: string;
+    slides: LocalizedSuitVideoSlide[];
+  };
   suits: Array<{
     name: string;
     element: string;
@@ -120,6 +142,10 @@ export type LocaleDictionary = {
   spread: {
     heading: string;
     description: string;
+    // SPREAD REDESIGN: copy for empty slots, deck prompt, and 2-second preparation overlay.
+    slotPlaceholder: string;
+    selectionPrompt: string;
+    preparing: string;
     cards: LocalizedSpreadCardEntry[];
   };
   contact: {
