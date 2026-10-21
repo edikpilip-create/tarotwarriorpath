@@ -74,5 +74,9 @@ If the change affects SEO or metadata, confirm:
 
 ## Notes
 
+- Vercel is the primary hosting target; import settings and server environment variables are documented in `docs/vercel.md`.
+- Keep Vercel Preview and custom environments non-indexable. Never commit `.vercel/` or environment secrets.
+- `next.config.ts` uses native Next.js output when `VERCEL=1` and standalone output otherwise; preserve the Docker and integration-test path.
+- Run tests and builds sequentially: `src/app/html-lang.test.ts` recreates `.next`.
 - The project currently uses `next dev --webpack` and `next build --webpack` because the Windows environment here is not using the native Turbopack bindings.
 - Key visual assets currently live in `public/media` and are referenced directly from the page components and CSS.

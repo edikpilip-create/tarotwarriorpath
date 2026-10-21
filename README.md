@@ -12,15 +12,17 @@ Before publishing, check `git remote -v`. Do not publish this project to the for
 
 ## Runtime
 
-Use Node.js `22.22.3` and npm `10.9.8`. These versions are declared in `package.json` and used by every Docker stage.
+Use Node.js `22.x` and npm `10.x`. CI and Docker retain the reproducible Node.js `22.22.3` / npm `10.9.8` pins; Vercel manages Node.js patch updates within `22.x`.
 
 ## Deployment Target
 
-Production is planned for a self-hosted VPS running Dokploy with Docker. The canonical production origin is `https://tarotwarriorpath.com`; `www.tarotwarriorpath.com` should redirect to the apex hostname.
+The primary deployment target is Vercel, importing the existing `edikpilip-create/tarotwarriorpath` repository and its `main` branch. Follow [the Vercel setup guide](docs/vercel.md) for exact import settings and Telegram environment variables.
+
+The first deployment can use the assigned `vercel.app` hostname. After connecting `tarotwarriorpath.com`, set it as the production canonical origin; redirect `www.tarotwarriorpath.com` to the apex hostname in Vercel's domain settings. Docker/Dokploy remains an optional alternative in [the self-hosting guide](docs/deployment.md).
 
 ## Local Development
 
-Create `.env.local` from `.env.example`, set `NEXT_PUBLIC_SITE_URL=http://localhost:3000`, and add Telegram credentials when testing lead delivery.
+Create `.env.local` from `.env.example`, set `NEXT_PUBLIC_SITE_URL=http://localhost:3000` and `DEPLOYMENT_ENV=development`, and add Telegram credentials when testing lead delivery.
 
 ```powershell
 npm.cmd ci
@@ -50,6 +52,6 @@ The root route `/` detects `Accept-Language` and redirects to a supported locale
 
 ## Production
 
-Production setup, Docker commands, environment variables, rollback, smoke tests, indexing controls, SEO policy, analytics events, and the anti-spam plan are documented in `docs/deployment.md`.
+Vercel import settings, environment variables, domains, preview indexing, and post-deployment checks are documented in [docs/vercel.md](docs/vercel.md). Optional Docker commands, rollback, SEO policy, analytics events, and the anti-spam plan remain documented in [docs/deployment.md](docs/deployment.md).
 
 The conversion model, macro conversion rule, privacy-safe analytics parameters, and design inputs for staging QA are documented in `docs/conversion-model.md`.

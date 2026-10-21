@@ -46,10 +46,106 @@ test("getSiteUrl normalizes a configured URL", () => {
   );
 });
 
+test("getSiteUrl uses Vercel production hostname without a custom URL", () => {
+  assert.equal(
+    getSiteUrl({
+      NODE_ENV: "production",
+      VERCEL_ENV: "production",
+      VERCEL_PROJECT_PRODUCTION_URL: "tarotwarriorpath.vercel.app",
+      VERCEL_URL: "tarotwarriorpath-build.vercel.app",
+    }),
+    "https://tarotwarriorpath.vercel.app",
+  );
+});
+
+test("getSiteUrl uses the preview hostname instead of the production hostname", () => {
+  assert.equal(
+    getSiteUrl({
+      NODE_ENV: "production",
+      VERCEL_ENV: "preview",
+      VERCEL_PROJECT_PRODUCTION_URL: "tarotwarriorpath.com",
+      VERCEL_URL: "tarot-preview.vercel.app",
+    }),
+    "https://tarot-preview.vercel.app",
+  );
+});
+
+test("getSiteUrl prefers an explicit canonical URL over Vercel hostnames", () => {
+  assert.equal(
+    getSiteUrl({
+      NEXT_PUBLIC_SITE_URL: "https://tarotwarriorpath.com/",
+      VERCEL_ENV: "production",
+      VERCEL_PROJECT_PRODUCTION_URL: "tarotwarriorpath.vercel.app",
+    }),
+    "https://tarotwarriorpath.com",
+  );
+});
+
+test("getSiteUrl uses the deployment hostname for a custom Vercel environment", () => {
+  assert.equal(
+    getSiteUrl({
+      NODE_ENV: "production",
+      VERCEL_ENV: "production",
+      VERCEL_TARGET_ENV: "staging",
+      VERCEL_PROJECT_PRODUCTION_URL: "tarotwarriorpath.com",
+      VERCEL_URL: "tarot-staging.vercel.app",
+    }),
+    "https://tarot-staging.vercel.app",
+  );
+});
+
+test("getSiteUrl falls back to the deployment hostname on a first production build", () => {
+  assert.equal(
+    getSiteUrl({
+      NODE_ENV: "production",
+      VERCEL_ENV: "production",
+      VERCEL_URL: "tarot-first-build.vercel.app",
+    }),
+    "https://tarot-first-build.vercel.app",
+  );
+});
+
+test("getSiteUrl rejects a preview without its own URL", () => {
+  assert.throws(
+    () => getSiteUrl({
+      NODE_ENV: "production",
+      VERCEL_ENV: "preview",
+      VERCEL_PROJECT_PRODUCTION_URL: "tarotwarriorpath.com",
+    }),
+    /NEXT_PUBLIC_SITE_URL/,
+  );
+});
+
 test("only an explicit production deployment enables indexing", () => {
   assert.equal(isIndexingEnabled({ DEPLOYMENT_ENV: "production" }), true);
   assert.equal(isIndexingEnabled({ DEPLOYMENT_ENV: "preview" }), false);
   assert.equal(isIndexingEnabled({}), false);
+});
+
+test("Vercel production enables indexing unless explicitly disabled", () => {
+  assert.equal(isIndexingEnabled({ VERCEL_ENV: "production" }), true);
+  assert.equal(isIndexingEnabled({
+    VERCEL_ENV: "production",
+    DEPLOYMENT_ENV: "preview",
+  }), false);
+});
+
+test("Vercel previews and custom environments cannot enable production indexing", () => {
+  for (const vercelEnvironment of ["preview", "development"]) {
+    const env = { VERCEL_ENV: vercelEnvironment, DEPLOYMENT_ENV: "production" };
+
+    assert.equal(isIndexingEnabled(env), false);
+    assert.deepEqual(buildRobotsPolicy(env, "https://tarot-preview.vercel.app").rules, {
+      userAgent: "*",
+      disallow: "/",
+    });
+  }
+
+  assert.equal(isIndexingEnabled({
+    VERCEL_ENV: "production",
+    VERCEL_TARGET_ENV: "staging",
+    DEPLOYMENT_ENV: "production",
+  }), false);
 });
 
 test("preview metadata and robots policy prevent indexing", async () => {

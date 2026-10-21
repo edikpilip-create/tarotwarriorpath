@@ -1,14 +1,16 @@
-# Deployment Guide
+# Docker / Dokploy Deployment Guide
+
+Vercel is the primary hosting target. For importing the GitHub repository into Vercel, follow [vercel.md](vercel.md). This document preserves the optional self-hosted Docker/Dokploy deployment path.
 
 ## Runtime Contract
 
-Use Node.js `22.22.3` and npm `10.9.8` for local development, CI, Docker, and production. `package.json` declares both versions and the Docker image uses the same Node.js patch version.
+CI and Docker pin Node.js `22.22.3` and npm `10.9.8`. `package.json` allows the compatible Node.js `22.x` and npm `10.x` release lines, so Vercel can apply managed patch updates.
 
-The application uses Next.js App Router with standalone output. Localized pages live under `src/app/(localized)/[lang]`, the root route redirects visitors to a locale, and `POST /api/telegram` handles lead delivery.
+The application uses Next.js App Router with standalone output outside Vercel. Vercel uses its native Next.js integration instead. Localized pages live under `src/app/(localized)/[lang]`, the root route redirects visitors to a locale, and `POST /api/telegram` handles lead delivery.
 
-## Selected Hosting Model
+## Optional Self-Hosting Model
 
-The selected production hosting model is self-hosted VPS + Dokploy + Docker.
+The alternative hosting model is self-hosted VPS + Dokploy + Docker.
 
 Production canonical origin:
 
@@ -47,7 +49,7 @@ Start from `.env.example`. Never commit `.env`, `.env.local`, or deployment secr
 
 For local work, use `NEXT_PUBLIC_SITE_URL=http://localhost:3000` and `DEPLOYMENT_ENV=development`.
 
-Production builds fail clearly when `NEXT_PUBLIC_SITE_URL` is missing. This prevents canonical URLs, Open Graph metadata, robots output, or sitemap entries from being generated for a fake production origin.
+Outside Vercel, production builds fail clearly when `NEXT_PUBLIC_SITE_URL` is missing. On Vercel, the system deployment hostnames provide the fallback described in [vercel.md](vercel.md).
 
 ## Commands
 

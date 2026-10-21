@@ -15,11 +15,16 @@ let hasWarnedAboutLocalSiteUrl = false;
 
 export function getSiteUrl(env: Environment = process.env): string {
   const configuredUrl = env.NEXT_PUBLIC_SITE_URL?.trim();
+  const vercelEnvironment = env.VERCEL_TARGET_ENV || env.VERCEL_ENV;
+  const vercelHostname = vercelEnvironment === "production"
+    ? env.VERCEL_PROJECT_PRODUCTION_URL?.trim() || env.VERCEL_URL?.trim()
+    : env.VERCEL_URL?.trim();
+  const resolvedUrl = configuredUrl || (vercelHostname ? `https://${vercelHostname}` : undefined);
 
-  if (!configuredUrl) {
+  if (!resolvedUrl) {
     if (env.NODE_ENV === "production") {
       throw new Error(
-        "NEXT_PUBLIC_SITE_URL is required for production builds and runtime.",
+        "NEXT_PUBLIC_SITE_URL or a Vercel deployment URL is required for production builds and runtime.",
       );
     }
 
@@ -33,7 +38,7 @@ export function getSiteUrl(env: Environment = process.env): string {
     return "http://localhost:3000";
   }
 
-  const siteUrl = new URL(configuredUrl);
+  const siteUrl = new URL(resolvedUrl);
 
   if (siteUrl.protocol !== "http:" && siteUrl.protocol !== "https:") {
     throw new Error("NEXT_PUBLIC_SITE_URL must use http:// or https://.");
@@ -43,7 +48,13 @@ export function getSiteUrl(env: Environment = process.env): string {
 }
 
 export function isIndexingEnabled(env: Environment = process.env): boolean {
-  return env.DEPLOYMENT_ENV === "production";
+  const vercelEnvironment = env.VERCEL_TARGET_ENV || env.VERCEL_ENV;
+
+  if (vercelEnvironment && vercelEnvironment !== "production") {
+    return false;
+  }
+
+  return (env.DEPLOYMENT_ENV ?? vercelEnvironment) === "production";
 }
 
 export function buildLocaleMetadata(
