@@ -53,6 +53,8 @@ On Production, robots should allow crawling unless indexing was deliberately dis
 
 If the site builds but the form fails, check both Telegram variables in the deployed environment and redeploy. Inspect function logs without copying secrets into an issue or chat. If an old canonical domain appears, check the Production override and rebuild.
 
+The form displays the localized API error while preserving the entered data. In browser network diagnostics, `TELEGRAM_NOT_CONFIGURED` means a missing/blank server variable; `TELEGRAM_REJECTED_401` means Telegram rejected the bot token; `TELEGRAM_REJECTED_400` means Telegram rejected the request (check the chat ID); `TELEGRAM_REJECTED_403` means the bot is forbidden from sending; `TELEGRAM_TIMEOUT` or `TELEGRAM_NETWORK` means the upstream request did not complete. Function logs contain only a failure category and numeric upstream codes, never token values or lead details. Copied values are trimmed before use. Store plain variable values in Vercel, without surrounding quotes or a `bot` prefix on the token.
+
 ## Local verification and alternative hosting
 
 Run tests and builds sequentially because the integration test recreates `.next`. Use Node.js `22.x` and npm `10.x`; CI and Docker retain exact version pins. A local Vercel-mode smoke test can set `VERCEL=1`, `VERCEL_ENV=preview`, and a test `VERCEL_URL`, then run `npm run build`. This is not a live Vercel deployment.

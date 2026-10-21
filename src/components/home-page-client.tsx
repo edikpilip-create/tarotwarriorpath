@@ -339,6 +339,7 @@ export default function HomePageClient({ lang, dictionary, assets }: HomePageCli
   const [spreadStage, setSpreadStage] = useState<SpreadStage>("selecting");
   const [isShufflingSpread, setIsShufflingSpread] = useState(false);
   const [formState, setFormState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [formError, setFormError] = useState("");
   const [quoteIsVisible, setQuoteIsVisible] = useState(false);
   const [activeSuitCarouselIndex, setActiveSuitCarouselIndex] = useState(0);
   const [isSiteMenuOpen, setIsSiteMenuOpen] = useState(false);
@@ -697,9 +698,11 @@ export default function HomePageClient({ lang, dictionary, assets }: HomePageCli
 
   async function submitLead(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     setFormState("sending");
+    setFormError("");
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
     const source = getRequestSource({
       lang,
       pathname: window.location.pathname,
@@ -726,7 +729,17 @@ export default function HomePageClient({ lang, dictionary, assets }: HomePageCli
       })
     }).catch(() => null);
 
-    const delivered = response?.ok === true;
+    const result: unknown = await response?.json().catch(() => null);
+    const apiResult = typeof result === "object" && result !== null
+      ? result as { ok?: unknown; message?: unknown }
+      : null;
+    const delivered = response?.ok === true && apiResult?.ok === true;
+
+    if (!delivered) {
+      setFormError(typeof apiResult?.message === "string" && apiResult.message.trim()
+        ? apiResult.message
+        : dictionary.feedback.error);
+    }
 
     setFormState(delivered ? "sent" : "error");
 
@@ -738,7 +751,7 @@ export default function HomePageClient({ lang, dictionary, assets }: HomePageCli
         lead_channel: leadChannel,
         telegram_delivery_status: "success"
       });
-      event.currentTarget.reset();
+      form.reset();
 
       return;
     }
@@ -1478,8 +1491,8 @@ export default function HomePageClient({ lang, dictionary, assets }: HomePageCli
             <button type="submit" disabled={formState === "sending"} data-button-id={buttonRegistry.submitLead.id}>
               {formState === "sending" ? dictionary.buttons.submitSending : dictionary.buttons.submitIdle}
             </button>
-            {formState === "sent" && <p className="form-note">{dictionary.feedback.sent}</p>}
-            {formState === "error" && <p className="form-note error">{dictionary.feedback.error}</p>}
+            {formState === "sent" && <p className="form-note" role="status">{dictionary.feedback.sent}</p>}
+            {formState === "error" && <p className="form-note error" role="alert">{formError || dictionary.feedback.error}</p>}
           </form>
         </section>
       </div>
